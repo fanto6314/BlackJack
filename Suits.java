@@ -1,7 +1,6 @@
-package test.dev.anto6314.blackJack2;
+package dev.anto6314.blackJack;
 
 public enum Suits {
-
     Fiori,
     Picche,
     Cuori,
