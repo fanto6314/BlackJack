@@ -1,7 +1,4 @@
-package dev.anto6314;
-
-import dev.anto6314.Deck;
-import dev.anto6314.Players;
+package dev.anto6314.blackJack;
 
 import java.util.Scanner;
 
@@ -24,12 +21,16 @@ public class GameCore {
         boolean gameOver = false;
         this.playerName = pName;
 
-        // Players init
+        /**
+         * Creazione giocatore, e banco
+         */
         you = new Players(this.playerName);
         dealer = new Players("il banco");
 
 
-        // Game Starts here --->
+        /**
+         * Inizio gioco
+         */
         while (!gameOver) {
 
             System.out.print("\n" + this.playerName + ", Vuoi giocare a BlyackJack? [Y o N] ");
@@ -50,80 +51,69 @@ public class GameCore {
         System.out.println("\n" + this.playerName + ", Vorresti riprovare? [Y o N] ");
         String Y = sc.next();
         if (Y.compareToIgnoreCase("Y") == 0) {
-
-            new dev.anto6314.GameCore(this.playerName);
+            new GameCore(this.playerName);
         }
-
-        //closing scanner
         sc.close();
-
     }
 
-    // Deal the game
+    /**
+     * Inizio del gioco
+     */
     private void dealTheGame() {
 
         boolean blackjack = false;
         this.doubleDownAllowed = true;
 
-        // players start with empty hands
         you.emptyHand();
         dealer.emptyHand();
 
         this.youDone = false;
         this.dealerDone = false;
 
-        // Distributing initial cards to players
         you.addCardToPlayersHand(newDeck.dealingNextCard());
         dealer.addCardToPlayersHand(newDeck.dealingNextCard());
         you.addCardToPlayersHand(newDeck.dealingNextCard());
         dealer.addCardToPlayersHand(newDeck.dealingNextCard());
 
-
-        // Cards Dealt
         System.out.println("\n---------- CARTE DISTRIBUITE ----------\n");
         you.printCardsInHand(true);
         dealer.printCardsInHand(false);
 
         System.out.printf("Il tuo punteggio:%d\t", you.getPlayersHandTotal());
 
-        // checking state on initial card -- if BlackJack
         blackjack = this.checkIfBlackJack();
 
         while (!this.youDone || !this.dealerDone) {
-
             if (!this.youDone) {
-
                 this.yourPlay();
-
-            } else if (!this.dealerDone) {
-
+            }
+            else if (!this.dealerDone) {
                 this.dealersPlay();
             }
-
             System.out.println();
         }
-
         if (!blackjack) {
-
             this.decideWinner();
         }
     }
 
-    // Natural 21 check on initial cards
+    /**
+     * Metodo che controlla se le carte distribuite iniziamente formano un BlackJack
+     * @return
+     */
     private boolean checkIfBlackJack() {
 
         boolean blackJack = false;
 
         if (you.getPlayersHandTotal() == 21) {
-
             this.youDone = true;
             this.dealerDone = true;
 
             if (you.getPlayersHandTotal() > dealer.getPlayersHandTotal() || dealer.getPlayersHandTotal() > 21) {
 
-                System.out.println("\t\t\t\t-----------------------");
-                System.out.println("\t\t\t\t|      BLACKJACK      |");
-                System.out.println("\t\t\t\t-----------------------\n");
+                System.out.println("\n\t\t\t\t-----------------------");
+                System.out.println("\n\t\t\t\t|      BLACKJACK      |");
+                System.out.println("\n\t\t\t\t-----------------------\n");
 
                 dealer.printCardsInHand(true);
 
@@ -131,7 +121,8 @@ public class GameCore {
                 System.out.print("Hai vinto\t");
 
                 blackJack = true;
-            } else {
+            }
+            else {
 
                 System.out.println("\tSarebbe potuto essere un tuo BlackJack!\n");
                 dealer.printCardsInHand(true);
@@ -139,8 +130,8 @@ public class GameCore {
                 System.out.printf("Punteggio del banco:%d\n\n", dealer.getPlayersHandTotal());
                 blackJack = false;
             }
-        } else if (dealer.getPlayersHandTotal() == 21) {
-
+        }
+        else if (dealer.getPlayersHandTotal() == 21) {
             dealer.printCardsInHand(true);
             System.out.printf("Punteggio del banco:%d\n\n", dealer.getPlayersHandTotal());
 
@@ -152,24 +143,20 @@ public class GameCore {
             this.dealerDone = true;
             blackJack = false;
         }
-
         return blackJack;
     }
 
-    // Player's Play Turn
+    /**
+     * Metodo che fa giocare il giocatore
+     */
     private void yourPlay() {
 
         String answer;
-        /*
-         * flags- Hit, Stand, Double, Split
-         * ---------------------------------
-         */
 
         if (doubleDownAllowed) {
-
             System.out.print("Prendi un'altra carta, stai o raddoppi? [C - S - R] ");
-        } else {
-
+        }
+        else {
             this.doubleDownAllowed = false;
             System.out.print("Prendi un'altra carta, o stai? [C - S] ");
         }
@@ -178,25 +165,24 @@ public class GameCore {
         System.out.println();
 
         if (answer.compareToIgnoreCase("C") == 0) {
-
             this.hit();
             this.doubleDownAllowed = false;
-        } else if (answer.compareToIgnoreCase("R") == 0 && this.doubleDownAllowed) {
-
+        }
+        else if (answer.compareToIgnoreCase("R") == 0 && this.doubleDownAllowed) {
             this.doubleDown();
-        } else if (answer.compareToIgnoreCase("SS") == 0) {
-
-            //this.split();
+        }
+        else if (answer.compareToIgnoreCase("SS") == 0) {
             this.doubleDownAllowed = false;
-        } else {
-
+        }
+        else {
             this.stay();
         }
     }
 
-    // Player's Hit
+    /**
+     * Metodo che permette al giocatore di prenedre un'altra carta
+     */
     private void hit() {
-
         System.out.println("\tHai scelto di prendere un'altra carta.\n");
         youDone = !you.addCardToPlayersHand(newDeck.dealingNextCard());
         you.printCardsInHand(true);
@@ -204,26 +190,29 @@ public class GameCore {
 
         if (you.getPlayersHandTotal() > 21) {
 
-            System.out.println("\t\t\t\t-----------------------");
-            System.out.println("\t\t\t\t|       HAI PERSO     |");
-            System.out.println("\t\t\t\t-----------------------\n");
+            System.out.println("\n\t\t\t\t-----------------------");
+            System.out.println("\n\t\t\t\t|       HAI PERSO     |");
+            System.out.println("\n\t\t\t\t-----------------------\n");
 
             dealer.printCardsInHand(true);
             System.out.printf("Punteggio del banco:%d\n\n", dealer.getPlayersHandTotal());
             youDone = true;
             dealerDone = true;
         }
-
     }
 
-    // Player's Stay
+    /**
+     * Metodo che permette al giocatore di non prendere un'altra carta
+     */
     private void stay() {
 
         System.out.println("\tHai scelto di stare, è il turno del banco. \n");
         youDone = true;
     }
 
-    // Player's Double Down
+    /**
+     * Metodo che permette al giocatore di raddoppiare
+     */
     private void doubleDown() {
 
         System.out.println("\tHai scelto di raddoppiare.\n");
@@ -249,9 +238,10 @@ public class GameCore {
         System.out.println("Ora è il turno del banco \n");
     }
 
-    // Dealer's Play Turn
+    /**
+     * Metodo che permette al dealer (computer) di giocare
+     */
     private void dealersPlay() {
-
         if (dealer.getPlayersHandTotal() < 17) {
 
             dealer.printCardsInHand(true);
@@ -268,8 +258,8 @@ public class GameCore {
                 System.out.println("\t\t\t\t-------------------------\n");
                 dealerDone = true;
             }
-        } else {
-
+        }
+        else {
             dealer.printCardsInHand(true);
             System.out.printf("Punteggio del banco:%d\n\n", dealer.getPlayersHandTotal());
             System.out.println("\tIl banco sta.\n");
@@ -277,7 +267,9 @@ public class GameCore {
         }
     }
 
-    // Deciding a Winner
+    /**
+     * Metodo che sceglie chi vince e chi perde, o se il risultato è pari
+     */
     private void decideWinner() {
 
         int youSum = you.getPlayersHandTotal();
@@ -290,14 +282,13 @@ public class GameCore {
             System.out.println("\t\t\t\t-------------------------\n");
 
             System.out.print("Hai vinto\t");
-
-        } else if (youSum == dealerSum) {
-
+        }
+        else if (youSum == dealerSum) {
             System.out.println("\t\t\t\t-------------------------");
             System.out.println("\t\t\t\t|         PARI          |");
             System.out.println("\t\t\t\t-------------------------\n");
-        } else {
-
+        }
+        else {
             System.out.println("\t\t\t\t-----------------------");
             System.out.println("\t\t\t\t|       HAI PERSO     |");
             System.out.println("\t\t\t\t-----------------------\n");
