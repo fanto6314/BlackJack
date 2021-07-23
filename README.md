@@ -3,6 +3,7 @@
   <a href="https://github.com/fanto6314/BlackJack">
     <a href="github/fanto6314/BlackJack"><img src="https://img.shields.io/badge/Version-V1.3.4-green?style=flat" alt="Version" /></a>
     <a href="https://www.codefactor.io/repository/github/fanto6314/blackjack/overview/main"><img src="https://www.codefactor.io/repository/github/fanto6314/blackjack/badge/main" alt="CodeFactor" /></a>
+    <a href="github/fanto6314/BlackJack"><img src="https://img.shields.io/badge/Owner-anto6314-limegreen?style=flat" alt="Version" /></a>
   </a>
 </p>
 <p align="center">
