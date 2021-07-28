@@ -35,4 +35,4 @@ You can use use this as you wish.
 
 anto6314 - antonio.foresta04@gmail.com
 
-Project Link: https://github.com/fanto6314/php-google-auth
+Project Link: https://github.com/fanto6314/BlackJack
